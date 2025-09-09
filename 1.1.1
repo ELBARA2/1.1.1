@@ -1,98 +1,43 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>BERO-1.1.1</title>
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            text-align: center;
-            margin: 0;
-            padding: 0;
-        }
-    </style>
-</head>
-<body>
-    <h1 id="main">Welcome:</h1>
-    <div>
-        <button onclick="theme()"></button>
-        <button onclick="language()"></button>
-    </div>
-    <input id="username" placeholder="Enter your username">
-    <input id="message" placeholder="Type your message here...">
-    <button onclick="send()">Send</button>
-    <ul id="chat">
-        <li>Welcome</li>
-    </ul>
-    <script>
-        const firebaseConfig = {
-          apiKey: "AIzaSyDgKp4aIxu74t1wRKKOP1VOXPhOVpbU9JQ",
-          authDomain: "bero-1-11.firebaseapp.com",
-          databaseURL: "https://bero-1-11-default-rtdb.asia-southeast1.firebasedatabase.app",
-          projectId: "bero-1-11",
-          storageBucket: "bero-1-11.firebasestorage.app",
-          messagingSenderId: "764476914806",
-          appId: "1:764476914806:web:df8cf3316c4c2229dbf357",
-          measurementId: "G-T0M1H9NC00"
-        };
-        
-        firebase.initializeApp(firebaseConfig);
-        const db = firebase.firestore();
-        const input = document.getElementById('message');
-        const list = document.getElementById('chat');
-        const name = document.getElementById('username');
-        let hasMessages = false;
-        
-        function send() {
-            const inputValue = input.value.trim();
-            const userName = name.value.trim();
-            if (inputValue !== '' && userName !== '') {
-                db.collection("chat").add({
-                    text: inputValue,
-                    user: userName,
-                    timestamp: firebase.firestore.FieldValue.serverTimestamp()
-                }).then(() => {
-                    console.log("Message sent successfully");
-                }).catch((error) => {
-                    console.error("Error sending message:", error);
-                });
-                input.value = '';
-            } else {
-                alert("Please enter both username and message");
-            }
-        }
-
-        input.addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                send();
-            }
+function activeUser() {
+    const userName = document.getElementById('username').value.trim();
+    const activeUserElement = document.getElementById('activeUser');
+    const currentActiveUser = activeUserElement.innerHTML;
+    
+    // Only proceed if username is not empty
+    if (!userName) return;
+    
+    if (newUser === 0) {
+        db.collection("chat").add({
+            text: `${userName} joined the chat`,
+            user: '',
+            timestamp: firebase.firestore.FieldValue.serverTimestamp()
+        }).then(() => {
+            console.log("User joined message sent");
+        }).catch((error) => {
+            console.error("Error sending user joined message:", error);
         });
-
-        db.collection("chat").orderBy("timestamp", "asc")
-          .onSnapshot((snapshot) => {
-            list.innerHTML = "";
-            if (snapshot.empty) {
-                const welcomeItem = document.createElement('li');
-                welcomeItem.textContent = 'Welcome to BERO Chat! Enter your username and start chatting.';
-                list.appendChild(welcomeItem);
-                hasMessages = false;
-            } else {
-                hasMessages = true;
-                snapshot.forEach((doc) => {
-                    const msg = doc.data();
-                    if (msg.text) {
-                        const listItem = document.createElement('li');
-                        const displayText = msg.user ? `${msg.user}: ${msg.text}` : msg.text;
-                        listItem.textContent = displayText;
-                        list.appendChild(listItem);
-                    }
-                });
-            }
-          }, (error) => {
-            console.error("Error listening to messages:", error);
-          });
-    </script>
-</body>
-</html>
+        
+        // Set the initial user
+        activeUserElement.innerHTML = userName;
+        newUser++;
+    }
+    else if (newUser > 0 && userName !== currentActiveUser && currentActiveUser !== "5") {  // Added check to ignore initial "5"
+        db.collection("chat").add({
+            text: `${currentActiveUser} changed name to ${userName}`,
+            user: '',
+            timestamp: firebase.firestore.FieldValue.serverTimestamp()
+        }).then(() => {
+            console.log("User name change message sent");
+        }).catch((error) => {
+            console.error("Error sending user name change message:", error);
+        });
+        
+        // Update the user name
+        activeUserElement.innerHTML = userName;
+    }
+    else if (userName !== currentActiveUser && currentActiveUser === "5") {
+        // First time setting username (from initial "5")
+        activeUserElement.innerHTML = userName;
+        newUser++;
+    }
+}
