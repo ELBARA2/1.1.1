@@ -1,43 +1,155 @@
-function activeUser() {
-    const userName = document.getElementById('username').value.trim();
-    const activeUserElement = document.getElementById('activeUser');
-    const currentActiveUser = activeUserElement.innerHTML;
-    
-    // Only proceed if username is not empty
-    if (!userName) return;
-    
-    if (newUser === 0) {
-        db.collection("chat").add({
-            text: `${userName} joined the chat`,
-            user: '',
-            timestamp: firebase.firestore.FieldValue.serverTimestamp()
-        }).then(() => {
-            console.log("User joined message sent");
-        }).catch((error) => {
-            console.error("Error sending user joined message:", error);
-        });
-        
-        // Set the initial user
-        activeUserElement.innerHTML = userName;
-        newUser++;
-    }
-    else if (newUser > 0 && userName !== currentActiveUser && currentActiveUser !== "5") {  // Added check to ignore initial "5"
-        db.collection("chat").add({
-            text: `${currentActiveUser} changed name to ${userName}`,
-            user: '',
-            timestamp: firebase.firestore.FieldValue.serverTimestamp()
-        }).then(() => {
-            console.log("User name change message sent");
-        }).catch((error) => {
-            console.error("Error sending user name change message:", error);
-        });
-        
-        // Update the user name
-        activeUserElement.innerHTML = userName;
-    }
-    else if (userName !== currentActiveUser && currentActiveUser === "5") {
-        // First time setting username (from initial "5")
-        activeUserElement.innerHTML = userName;
-        newUser++;
-    }
-}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>myGames</title>
+    <style>
+        p{text-align: center;}
+        #gm {margin-top: 5px; border-collapse: collapse;}
+        #gm td {width: 50px; height: 50px;}
+        #gm button {width: 50px; height: 50px; background-color: #00000000; border: none;}
+        #gm tr:nth-child(odd) td:nth-child(odd) { background-color: #7a7a7a55; }
+        #gm tr:nth-child(odd) td:nth-child(even) { background-color: #99999955; }
+        #gm tr:nth-child(even) td:nth-child(odd) { background-color: #99999955; }
+        #gm tr:nth-child(even) td:nth-child(even) { background-color: #7a7a7a55; }
+        #EXIT {position: sticky; top: 0; right: 0; z-index: 10000;}
+    </style>
+</head>
+<body>
+    <div><input id="xx" placeholder="x"><input id="yy" placeholder="y"><button onclick="change(document.getElementById('xx').value,document.getElementById('yy').value)">apply</button></div>
+    <table id="gm"><tr id="1"><td id="11"><button id="b11">11</button></td></tr></table>
+    <button id="ext" onclick="ex(document.getElementById('xt').value)">expand → t times</button>
+    <button id="sxt" onclick="sx(document.getElementById('xt').value)">shrink ← t times</button>
+    <input id="xt" type="number" placeholder="t=1">
+    <div><button id="eyt" onclick="ey(document.getElementById('yt').value)">expand ↓ t times</button>
+    <button id="syt" onclick="sy(document.getElementById('yt').value)">shrink ↑ t times</button>
+    <input id="yt" type="number" placeholder="t=1"></div>
+    <button id="f" onclick="full()">full</button>
+    <button id="EXIT" style="display: none;" onclick="exit()">exit</button>
+    <script>
+        let x=1;
+        let y=1;
+        function full() {
+            const all = document.body.children;
+            for (let el of all) {
+                if (el.id === 'gm' || el.id === 'EXIT') {
+                    el.style.display = 'block';
+                } else {
+                    el.style.display = 'none';
+                }
+            }
+            const gm = document.getElementById('gm');
+            gm.style.marginTop = '0px';
+            gm.style.marginLeft = '0px';
+            gm.style.position = 'absolute';
+            gm.style.top = '0';
+            gm.style.left = '0';
+            gm.style.width = '100%';
+            gm.style.height = 'auto';
+            gm.style.maxHeight = '100vh';
+            gm.style.overflow = 'auto';
+            gm.style.zIndex = '9998';
+            document.body.style.overflow = 'auto';
+            const exitBtn = document.getElementById('EXIT');
+            exitBtn.style.display = 'block';
+            exitBtn.style.position = 'sticky';
+            exitBtn.style.top = '0';
+            exitBtn.style.right = '0';
+            exitBtn.style.zIndex = '9999';
+        }
+        function exit() {
+            const all = document.body.children;
+            for (let el of all) {
+                el.style.display = '';
+            }
+            const gm = document.getElementById('gm');
+            gm.style.marginTop = '';
+            gm.style.marginLeft = '';
+            gm.style.position = '';
+            gm.style.top = '';
+            gm.style.left = '';
+            gm.style.width = '';
+            gm.style.height = '';
+            gm.style.maxHeight = '';
+            gm.style.overflow = '';
+            gm.style.zIndex = '';
+            document.body.style.overflow = '';
+            const exitBtn = document.getElementById('EXIT');
+            exitBtn.style.position = '';
+            exitBtn.style.top = '';
+            exitBtn.style.right = '';
+            exitBtn.style.zIndex = '';
+        }
+        function change(targetX, targetY) {
+            targetX = parseInt(targetX) || 1;
+            targetY = parseInt(targetY) || 1;
+            let deltaX = targetX - x;
+            let deltaY = targetY - y;
+            if (deltaX > 0) {
+                ex(deltaX);
+            } else if (deltaX < 0) {
+                sx(-deltaX);
+            }
+            if (deltaY > 0) {
+                ey(deltaY);
+            } else if (deltaY < 0) {
+                sy(-deltaY);
+            }
+        }
+        function ex(times = 1) {
+            times = parseInt(times) || 1;
+            let table = document.getElementById("gm");
+            for (let t = 0; t < times; t++) {
+                x++;
+                for (let i = 0; i < y; i++) {
+                    let row = table.rows[i];
+                    let newcell = row.insertCell(-1);
+                    newcell.id = row.id + x;
+                    let BTN = document.createElement('button');
+                    BTN.innerHTML = newcell.id;
+                    BTN.id='b' + newcell.id;
+                    newcell.appendChild(BTN);
+                }
+            }
+        }
+        function sx(times = 1) {
+            times = parseInt(times) || 1;
+            let table = document.getElementById("gm");
+            for (let t = 0; t < times; t++) {
+                if (x > 1) {
+                    for (let i = 0; i < y; i++) {
+                        table.rows[i].deleteCell(-1);
+                    }
+                    x--;
+                }
+            }
+        }
+        function ey(times = 1) {
+            times = parseInt(times) || 1;
+            let table = document.getElementById("gm");
+            for (let t=0; t<times; t++) {
+                let newrow = table.insertRow(-1);
+                y++;
+                newrow.id = y;
+                for (let j=1; j<=x; j++) {
+                    let newcell = newrow.insertCell(-1);
+                    newcell.id = y+""+j;
+                    let BTN = document.createElement('button');
+                    BTN.innerHTML = newcell.id;
+                    BTN.id='b' + newcell.id;
+                    newcell.appendChild(BTN);
+                }
+            }
+        }
+        function sy(times = 1) {
+            times = parseInt(times) || 1;
+            let table = document.getElementById("gm");
+            for (let t = 0; t < times; t++) {
+                if (y > 1) {
+                    table.deleteRow(-1);
+                    y--;
+                }
+            }
+        }
+    </script>
+</body>
+</html>
