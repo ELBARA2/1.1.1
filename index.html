@@ -1,155 +1,573 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ar" dir="rtl">
 <head>
-    <title>myGames</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>البراء جمال الدين جلال - Portfolio</title>
     <style>
-        p{text-align: center;}
-        #gm {margin-top: 5px; border-collapse: collapse;}
-        #gm td {width: 50px; height: 50px;}
-        #gm button {width: 50px; height: 50px; background-color: #00000000; border: none;}
-        #gm tr:nth-child(odd) td:nth-child(odd) { background-color: #7a7a7a55; }
-        #gm tr:nth-child(odd) td:nth-child(even) { background-color: #99999955; }
-        #gm tr:nth-child(even) td:nth-child(odd) { background-color: #99999955; }
-        #gm tr:nth-child(even) td:nth-child(even) { background-color: #7a7a7a55; }
-        #EXIT {position: sticky; top: 0; right: 0; z-index: 10000;}
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f5f5;
+            min-height: 100vh;
+            direction: rtl;
+            transition: background-color 0.3s ease;
+        }
+        
+        body.dark-mode {
+            background-color: #000000;
+        }
+        
+        .theme-toggle {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 1000;
+            background-color: #3b82f6;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .theme-toggle:hover {
+            background-color: #2563eb;
+            transform: scale(1.05);
+        }
+        
+        body.dark-mode .theme-toggle {
+            background-color: #fbbf24;
+            color: #000;
+        }
+        
+        body.dark-mode .theme-toggle:hover {
+            background-color: #f59e0b;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 5rem 1rem 3rem;
+        }
+        
+        .cards-container {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+        
+        .card {
+            border-radius: 12px;
+            padding: 2rem;
+            width: 100%;
+            transition: all 0.3s ease-in-out;
+        }
+        
+        .card:hover {
+            transform: translateY(-2px);
+        }
+
+        /* تعديل ألوان الكروت - الوضع النهاري (أبيض بمسحة لون) والوضع الليلي (أسود بمسحة لون) */
+
+        /* الكارت الأزرق */
+        .card-blue {
+            background: #f0f7ff; /* أبيض بمسحة زرقاء */
+            border: 2px solid #3b82f6;
+            box-shadow: 0 0 5px #3b82f6, 0 0 15px rgba(59, 130, 246, 0.2);
+        }
+        body.dark-mode .card-blue {
+            background-color: #050a14; /* أسود بمسحة زرقاء داكنة */
+        }
+        .card-blue:hover {
+            box-shadow: 0 0 12px #60a5fa, 0 0 25px rgba(96, 165, 250, 0.3);
+            border-color: #60a5fa;
+        }
+
+        /* الكارت البنفسجي */
+        .card-purple {
+            background: #f9f5ff; /* أبيض بمسحة بنفسجية */
+            border: 2px solid #a855f7;
+            box-shadow: 0 0 5px #a855f7, 0 0 15px rgba(168, 85, 247, 0.2);
+        }
+        body.dark-mode .card-purple {
+            background-color: #0c0514; /* أسود بمسحة بنفسجية داكنة */
+        }
+        .card-purple:hover {
+            box-shadow: 0 0 12px #c084fc, 0 0 25px rgba(192, 132, 252, 0.3);
+            border-color: #c084fc;
+        }
+
+        /* الكارت الأخضر */
+        .card-green {
+            background: #f0fdf4; /* أبيض بمسحة خضراء */
+            border: 2px solid #22c55e;
+            box-shadow: 0 0 5px #22c55e, 0 0 15px rgba(34, 197, 94, 0.2);
+        }
+        body.dark-mode .card-green {
+            background-color: #05140a; /* أسود بمسحة خضراء داكنة */
+        }
+        .card-green:hover {
+            box-shadow: 0 0 12px #4ade80, 0 0 25px rgba(74, 222, 128, 0.3);
+            border-color: #4ade80;
+        }
+
+        /* الكارت الأحمر */
+        .card-red {
+            background: #fef2f2; /* أبيض بمسحة حمراء */
+            border: 2px solid #ef4444;
+            box-shadow: 0 0 5px #ef4444, 0 0 15px rgba(239, 68, 68, 0.2);
+        }
+        body.dark-mode .card-red {
+            background-color: #140505; /* أسود بمسحة حمراء داكنة */
+        }
+        .card-red:hover {
+            box-shadow: 0 0 12px #f87171, 0 0 25px rgba(248, 113, 113, 0.3);
+            border-color: #f87171;
+        }
+
+        /* الكارت الأصفر */
+        .card-yellow {
+            background: #fffbeb; /* أبيض بمسحة صفراء */
+            border: 2px solid #eab308;
+            box-shadow: 0 0 5px #eab308, 0 0 15px rgba(234, 179, 8, 0.2);
+        }
+        body.dark-mode .card-yellow {
+            background-color: #140e05; /* أسود بمسحة صفراء داكنة */
+        }
+        .card-yellow:hover {
+            box-shadow: 0 0 12px #fbbf24, 0 0 25px rgba(251, 191, 36, 0.3);
+            border-color: #fbbf24;
+        }
+
+        /* بقية التنسيقات */
+        .profile-section {
+            text-align: center;
+        }
+        
+        .profile-img {
+            width: 128px;
+            height: 128px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin: 0 auto 1rem;
+            border: 4px solid #93c5fd;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .card h2 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            text-align: center;
+            color: #1f2937;
+        }
+        
+        body.dark-mode .card h2 {
+            color: #f3f4f6;
+        }
+        
+        .profile-name {
+            color: #1f2937;
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+        
+        body.dark-mode .profile-name {
+            color: #f3f4f6;
+        }
+        
+        .profile-title {
+            color: #3b82f6;
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+        
+        .profile-subtitle {
+            color: #6b7280;
+        }
+        
+        body.dark-mode .profile-subtitle {
+            color: #9ca3af;
+        }
+        
+        .about-text {
+            color: #374151;
+            line-height: 1.8;
+            text-align: center;
+        }
+        
+        body.dark-mode .about-text {
+            color: #d1d5db;
+        }
+        
+        .skills-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+        
+        .skill-item {
+            background-color: rgba(34, 197, 94, 0.1);
+            border-radius: 0.5rem;
+            padding: 0.75rem;
+            border-right: 4px solid #22c55e;
+            font-weight: 600;
+            color: #166534;
+        }
+        
+        body.dark-mode .skill-item {
+            background-color: rgba(34, 197, 94, 0.15);
+            color: #86efac;
+        }
+        
+        .project-box {
+            background-color: rgba(239, 68, 68, 0.05);
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+            border: 1px dashed #fca5a5;
+            text-align: center;
+        }
+        
+        body.dark-mode .project-box {
+            background-color: rgba(239, 68, 68, 0.1);
+            border-color: #991b1b;
+        }
+        
+        .project-description {
+            color: #374151;
+            margin-bottom: 1rem;
+            line-height: 1.6;
+        }
+        
+        body.dark-mode .project-description {
+            color: #d1d5db;
+        }
+        
+        .btn-project {
+            display: inline-block;
+            background-color: #ef4444;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .btn-project:hover {
+            background-color: #dc2626;
+            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+            transform: scale(1.05);
+        }
+        
+        .certificates-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+        
+        .certificate-item {
+            background-color: rgba(234, 179, 8, 0.05);
+            border-radius: 0.5rem;
+            padding: 1rem;
+            border: 1px solid rgba(234, 179, 8, 0.3);
+            text-decoration: none;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s;
+        }
+        
+        body.dark-mode .certificate-item {
+            background-color: rgba(234, 179, 8, 0.08);
+            border-color: rgba(161, 98, 7, 0.5);
+        }
+        
+        .certificate-item:hover {
+            background-color: rgba(234, 179, 8, 0.1);
+            border-color: #eab308;
+            transform: translateX(-5px);
+        }
+        
+        .certificate-info {
+            flex: 1;
+        }
+        
+        .certificate-title {
+            color: #854d0e;
+            font-weight: bold;
+            font-size: 1.125rem;
+            margin-bottom: 0.25rem;
+        }
+        
+        body.dark-mode .certificate-title {
+            color: #fbbf24;
+        }
+        
+        .certificate-code {
+            color: #6b7280;
+            font-size: 0.875rem;
+        }
+        
+        body.dark-mode .certificate-code {
+            color: #9ca3af;
+        }
+        
+        .certificate-icon {
+            font-size: 1.5rem;
+        }
+        
+        footer {
+            background-color: #e5e7eb;
+            border-top: 1px solid #9ca3af;
+            padding: 3rem 1rem;
+            margin-top: 4rem;
+            transition: all 0.3s ease;
+        }
+        
+        body.dark-mode footer {
+            background-color: #0a0a0a;
+            border-top: 1px solid #374151;
+        }
+        
+        .footer-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .footer-title {
+            text-align: center;
+            font-size: 2rem;
+            font-weight: bold;
+            color: #1f2937;
+            margin-bottom: 2rem;
+        }
+        
+        body.dark-mode .footer-title {
+            color: #f3f4f6;
+        }
+        
+        .contact-grid {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+        
+        .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            background: white;
+            padding: 1rem 1.5rem;
+            border-radius: 0.75rem;
+            text-decoration: none;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s;
+        }
+        
+        body.dark-mode .contact-item {
+            background: #111827;
+        }
+        
+        .contact-item:hover {
+            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+            transform: scale(1.05);
+        }
+        
+        .contact-icon {
+            width: 28px;
+            height: 28px;
+        }
+        
+        .contact-info {
+            text-align: right;
+        }
+        
+        .contact-label {
+            font-size: 0.875rem;
+            color: #6b7280;
+        }
+        
+        body.dark-mode .contact-label {
+            color: #9ca3af;
+        }
+        
+        .contact-value {
+            font-weight: bold;
+            color: #1f2937;
+        }
+        
+        body.dark-mode .contact-value {
+            color: #f3f4f6;
+        }
+        
+        .footer-bottom {
+            text-align: center;
+            color: #6b7280;
+            font-size: 0.875rem;
+            margin-top: 2rem;
+        }
+        
+        body.dark-mode .footer-bottom {
+            color: #9ca3af;
+        }
+        
+        @media (max-width: 768px) {
+            .theme-toggle {
+                top: 10px;
+                left: 10px;
+                padding: 10px 20px;
+                font-size: 14px;
+            }
+        }
     </style>
 </head>
 <body>
-    <div><input id="xx" placeholder="x"><input id="yy" placeholder="y"><button onclick="change(document.getElementById('xx').value,document.getElementById('yy').value)">apply</button></div>
-    <table id="gm"><tr id="1"><td id="11"><button id="b11">11</button></td></tr></table>
-    <button id="ext" onclick="ex(document.getElementById('xt').value)">expand → t times</button>
-    <button id="sxt" onclick="sx(document.getElementById('xt').value)">shrink ← t times</button>
-    <input id="xt" type="number" placeholder="t=1">
-    <div><button id="eyt" onclick="ey(document.getElementById('yt').value)">expand ↓ t times</button>
-    <button id="syt" onclick="sy(document.getElementById('yt').value)">shrink ↑ t times</button>
-    <input id="yt" type="number" placeholder="t=1"></div>
-    <button id="f" onclick="full()">full</button>
-    <button id="EXIT" style="display: none;" onclick="exit()">exit</button>
+    <button class="theme-toggle" onclick="toggleTheme()">🌙 الوضع الليلي</button>
+    
+    <div class="container">
+        <div class="cards-container">
+            <div class="card card-blue">
+                <div class="profile-section">
+                    <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'%3E%3Ccircle cx='100' cy='100' r='100' fill='%233b82f6'/%3E%3Ctext x='100' y='125' font-size='80' fill='white' text-anchor='middle' font-family='Arial'%3Eب%3C/text%3E%3C/svg%3E" alt="البراء جمال الدين جلال" class="profile-img">
+                    <h2 class="profile-name">البراء جمال الدين جلال</h2>
+                    <p class="profile-title">طالب أزهري</p>
+                    <p class="profile-subtitle">بكلية التجارة</p>
+                </div>
+            </div>
+            
+            <div class="card card-purple">
+                <h2 style="color: #7c3aed;">نبذة عني</h2>
+                <p class="about-text">مهتم بالبرمجة والألعاب. أهدف لأن أصبح مبرمج ألعاب هادفة للمجتمع تجمع بين المتعة والفائدة. أؤمن بقوة التكنولوجيا في تغيير حياة الناس للأفضل. مؤمن بأن الذكاء الاصطناعي أداة مهمة للتطوير البشري وتمكين المبدعين من تحقيق أفكارهم. أسعى دائماً للتعلم المستمر واكتساب مهارات جديدة في عالم البرمجة وتطوير الألعاب.</p>
+            </div>
+            
+            <div class="card card-green">
+                <h2 style="color: #15803d;">المهارات</h2>
+                <div class="skills-list">
+                    <div class="skill-item">Python</div>
+                    <div class="skill-item">HTML, CSS, JavaScript</div>
+                    <div class="skill-item">C#</div>
+                    <div class="skill-item">Blender Artist</div>
+                    <div class="skill-item">Godot Developer</div>
+                </div>
+            </div>
+            
+            <div class="card card-red">
+                <h2 style="color: #b91c1c;">المشروع المفضل</h2>
+                <div class="project-box">
+                    <p class="project-description">أول ويب كامل صنعته بمفردي بدون أن أيأس من نهايته</p>
+                    <a href="https://elbara2.github.io/A-new/" target="_blank" class="btn-project">زيارة المشروع</a>
+                </div>
+            </div>
+            
+            <div class="card card-yellow">
+                <h2 style="color: #a16207;">الشهادات</h2>
+                <div class="certificates-list">
+                    <a href="https://www.sololearn.com/certificates/CC-UJLD5KUJ" target="_blank" class="certificate-item">
+                        <div class="certificate-info">
+                            <div class="certificate-title">شهادة Python - SoloLearn</div>
+                            <div class="certificate-code">CC-UJLD5KUJ</div>
+                        </div>
+                        <div class="certificate-icon">🏆</div>
+                    </a>
+                    <a href="https://www.sololearn.com/certificates/CC-J0KJACKS" target="_blank" class="certificate-item">
+                        <div class="certificate-info">
+                            <div class="certificate-title">شهادة JavaScript - SoloLearn</div>
+                            <div class="certificate-code">CC-J0KJACKS</div>
+                        </div>
+                        <div class="certificate-icon">🏆</div>
+                    </a>
+                    <a href="https://www.sololearn.com/certificates/CC-XKYGCP4I" target="_blank" class="certificate-item">
+                        <div class="certificate-info">
+                            <div class="certificate-title">شهادة HTML - SoloLearn</div>
+                            <div class="certificate-code">CC-XKYGCP4I</div>
+                        </div>
+                        <div class="certificate-icon">🏆</div>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <footer>
+        <div class="footer-container">
+            <h3 class="footer-title">تواصل معي</h3>
+            <div class="contact-grid">
+                <a href="https://wa.me/01092030926" target="_blank" class="contact-item">
+                    <svg class="contact-icon" style="color: #22c55e;" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
+                    </svg>
+                    <div class="contact-info">
+                        <div class="contact-label">واتساب</div>
+                        <div class="contact-value">01092030926</div>
+                    </div>
+                </a>
+                
+                <a href="https://github.com/ELBARA2" target="_blank" class="contact-item">
+                    <svg class="contact-icon" style="color: #1f2937;" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+                    </svg>
+                    <div class="contact-info">
+                        <div class="contact-label">GitHub</div>
+                        <div class="contact-value">ELBARA2</div>
+                    </div>
+                </a>
+                
+                <a href="mailto:elpoker1112005@gmail.com" class="contact-item">
+                    <svg class="contact-icon" style="color: #ef4444;" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
+                    </svg>
+                    <div class="contact-info">
+                        <div class="contact-label">البريد الإلكتروني</div>
+                        <div class="contact-value">elpoker1112005@gmail.com</div>
+                    </div>
+                </a>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>صُنع بـ ❤️ بواسطة البراء جمال الدين</p>
+            </div>
+        </div>
+    </footer>
+    
     <script>
-        let x=1;
-        let y=1;
-        function full() {
-            const all = document.body.children;
-            for (let el of all) {
-                if (el.id === 'gm' || el.id === 'EXIT') {
-                    el.style.display = 'block';
-                } else {
-                    el.style.display = 'none';
-                }
-            }
-            const gm = document.getElementById('gm');
-            gm.style.marginTop = '0px';
-            gm.style.marginLeft = '0px';
-            gm.style.position = 'absolute';
-            gm.style.top = '0';
-            gm.style.left = '0';
-            gm.style.width = '100%';
-            gm.style.height = 'auto';
-            gm.style.maxHeight = '100vh';
-            gm.style.overflow = 'auto';
-            gm.style.zIndex = '9998';
-            document.body.style.overflow = 'auto';
-            const exitBtn = document.getElementById('EXIT');
-            exitBtn.style.display = 'block';
-            exitBtn.style.position = 'sticky';
-            exitBtn.style.top = '0';
-            exitBtn.style.right = '0';
-            exitBtn.style.zIndex = '9999';
-        }
-        function exit() {
-            const all = document.body.children;
-            for (let el of all) {
-                el.style.display = '';
-            }
-            const gm = document.getElementById('gm');
-            gm.style.marginTop = '';
-            gm.style.marginLeft = '';
-            gm.style.position = '';
-            gm.style.top = '';
-            gm.style.left = '';
-            gm.style.width = '';
-            gm.style.height = '';
-            gm.style.maxHeight = '';
-            gm.style.overflow = '';
-            gm.style.zIndex = '';
-            document.body.style.overflow = '';
-            const exitBtn = document.getElementById('EXIT');
-            exitBtn.style.position = '';
-            exitBtn.style.top = '';
-            exitBtn.style.right = '';
-            exitBtn.style.zIndex = '';
-        }
-        function change(targetX, targetY) {
-            targetX = parseInt(targetX) || 1;
-            targetY = parseInt(targetY) || 1;
-            let deltaX = targetX - x;
-            let deltaY = targetY - y;
-            if (deltaX > 0) {
-                ex(deltaX);
-            } else if (deltaX < 0) {
-                sx(-deltaX);
-            }
-            if (deltaY > 0) {
-                ey(deltaY);
-            } else if (deltaY < 0) {
-                sy(-deltaY);
+        function toggleTheme() {
+            const body = document.body;
+            const button = document.querySelector('.theme-toggle');
+            
+            body.classList.toggle('dark-mode');
+            
+            if (body.classList.contains('dark-mode')) {
+                button.innerHTML = '☀️ الوضع النهاري';
+                localStorage.setItem('theme', 'dark');
+            } else {
+                button.innerHTML = '🌙 الوضع الليلي';
+                localStorage.setItem('theme', 'light');
             }
         }
-        function ex(times = 1) {
-            times = parseInt(times) || 1;
-            let table = document.getElementById("gm");
-            for (let t = 0; t < times; t++) {
-                x++;
-                for (let i = 0; i < y; i++) {
-                    let row = table.rows[i];
-                    let newcell = row.insertCell(-1);
-                    newcell.id = row.id + x;
-                    let BTN = document.createElement('button');
-                    BTN.innerHTML = newcell.id;
-                    BTN.id='b' + newcell.id;
-                    newcell.appendChild(BTN);
-                }
+        
+        window.addEventListener('DOMContentLoaded', () => {
+            const savedTheme = localStorage.getItem('theme');
+            const button = document.querySelector('.theme-toggle');
+            
+            if (savedTheme === 'dark') {
+                document.body.classList.add('dark-mode');
+                button.innerHTML = '☀️ الوضع النهاري';
             }
-        }
-        function sx(times = 1) {
-            times = parseInt(times) || 1;
-            let table = document.getElementById("gm");
-            for (let t = 0; t < times; t++) {
-                if (x > 1) {
-                    for (let i = 0; i < y; i++) {
-                        table.rows[i].deleteCell(-1);
-                    }
-                    x--;
-                }
-            }
-        }
-        function ey(times = 1) {
-            times = parseInt(times) || 1;
-            let table = document.getElementById("gm");
-            for (let t=0; t<times; t++) {
-                let newrow = table.insertRow(-1);
-                y++;
-                newrow.id = y;
-                for (let j=1; j<=x; j++) {
-                    let newcell = newrow.insertCell(-1);
-                    newcell.id = y+""+j;
-                    let BTN = document.createElement('button');
-                    BTN.innerHTML = newcell.id;
-                    BTN.id='b' + newcell.id;
-                    newcell.appendChild(BTN);
-                }
-            }
-        }
-        function sy(times = 1) {
-            times = parseInt(times) || 1;
-            let table = document.getElementById("gm");
-            for (let t = 0; t < times; t++) {
-                if (y > 1) {
-                    table.deleteRow(-1);
-                    y--;
-                }
-            }
-        }
+        });
     </script>
 </body>
 </html>
